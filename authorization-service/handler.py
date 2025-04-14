@@ -1,6 +1,6 @@
 import base64
-import json
 import os
+import json
 
 def lambda_handler(event, context):
     headers = event.get("headers", {})
@@ -8,37 +8,37 @@ def lambda_handler(event, context):
 
     if not auth_header:
         return {
-            "isAuthorized": False,
-            "context": {}
+            "statusCode": 401,
+            "body": json.dumps({"message": "Authorization header missing"})
         }
 
     if not auth_header.startswith("Basic "):
         return {
-            "isAuthorized": False,
-            "context": {}
+            "statusCode": 403,
+            "body": json.dumps({"message": "Invalid authorization type"})
         }
 
     try:
         token = auth_header.split(" ")[1]
-        decoded = base64.b64decode(token).decode("utf-8")  # format: username:password
+        decoded = base64.b64decode(token).decode("utf-8")  # username:password
         username, password = decoded.split(":", 1)
 
         expected_password = os.environ.get(username)
-        if expected_password == password:
+        if expected_password != password:
             return {
-                "isAuthorized": True,
-                "context": {
-                    "user": username
-                }
+                "statusCode": 403,
+                "body": json.dumps({"message": "Access denied"})
             }
-        else:
-            return {
-                "isAuthorized": False,
-                "context": {}
+
+        return {
+            "isAuthorized": True,
+            "context": {
+                "user": username
             }
+        }
 
     except Exception as e:
         return {
-            "isAuthorized": False,
-            "context": {}
+            "statusCode": 403,
+            "body": json.dumps({"message": f"Error: {str(e)}"})
         }
