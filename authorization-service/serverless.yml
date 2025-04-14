@@ -5,8 +5,8 @@ frameworkVersion: "3"
 provider:
   name: aws
   runtime: python3.11
-  region: us-east-1
   stage: dev
+  region: us-east-1
 
   httpApi:
     authorizers:
