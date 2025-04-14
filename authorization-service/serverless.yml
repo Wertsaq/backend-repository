@@ -1,7 +1,5 @@
 service: authorization-service
 
-frameworkVersion: "3.38.0"
-
 provider:
   name: aws
   runtime: python3.12
