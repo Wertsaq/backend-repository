@@ -1,0 +1,19 @@
+service: import-service
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.11
+  stage: dev
+  region: us-east-1
+
+functions:
+  importProducts:
+    handler: handler.import_products
+    events:
+      - httpApi:
+          path: /import
+          method: post
+          authorizer:
+            name: basicAuth
