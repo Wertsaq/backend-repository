@@ -5,8 +5,8 @@ frameworkVersion: "3"
 provider:
   name: aws
   runtime: python3.11
-  stage: dev
   region: us-east-1
+  stage: dev
 
 functions:
   importProducts:
@@ -16,4 +16,8 @@ functions:
           path: /import
           method: post
           authorizer:
-            name: basicAuth
+            type: request
+            authorizerId:
+              Fn::GetAtt:
+                - ImportApiGatewayAuthorizer
+                - AuthorizerId
