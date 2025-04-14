@@ -13,11 +13,10 @@ provider:
       basicAuth:
         type: request
         functionName: authorizationService
-        identitySource:
-          - $request.header.Authorization
 
 functions:
   authorizationService:
+    name: authorizationService
     handler: handler.lambda_handler
 
 plugins:
