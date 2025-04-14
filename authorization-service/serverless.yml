@@ -1,0 +1,17 @@
+service: authorization-service
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+  stage: dev
+  environment: {}
+
+functions:
+  authorizationService:
+    handler: handler.lambda_handler
+
+plugins:
+  - serverless-dotenv-plugin
