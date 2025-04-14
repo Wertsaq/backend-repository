@@ -10,6 +10,7 @@ provider:
 
 functions:
   importProducts:
+    name: importProducts
     handler: handler.import_products
     events:
       - http:
