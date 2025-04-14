@@ -12,12 +12,9 @@ functions:
   importProducts:
     handler: handler.import_products
     events:
-      - httpApi:
-          path: /import
+      - http:
+          path: import
           method: post
           authorizer:
             type: request
-            authorizerId:
-              Fn::GetAtt:
-                - ImportApiGatewayAuthorizer
-                - AuthorizerId
+            arn: arn:aws:lambda:us-east-1:970547362653:function:authorizationService
