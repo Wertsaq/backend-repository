@@ -4,18 +4,18 @@ import os
 
 def lambda_handler(event, context):
     headers = event.get("headers", {})
-    auth_header = headers.get("Authorization")
+    auth_header = headers.get("Authorization") or headers.get("authorization")
 
     if not auth_header:
         return {
-            "statusCode": 401,
-            "body": json.dumps({"message": "Authorization header missing"})
+            "isAuthorized": False,
+            "context": {}
         }
 
     if not auth_header.startswith("Basic "):
         return {
-            "statusCode": 403,
-            "body": json.dumps({"message": "Invalid authorization type"})
+            "isAuthorized": False,
+            "context": {}
         }
 
     try:
@@ -24,21 +24,21 @@ def lambda_handler(event, context):
         username, password = decoded.split(":", 1)
 
         expected_password = os.environ.get(username)
-        if expected_password != password:
+        if expected_password == password:
             return {
-                "statusCode": 403,
-                "body": json.dumps({"message": "Access denied"})
+                "isAuthorized": True,
+                "context": {
+                    "user": username
+                }
             }
-
-        return {
-            "isAuthorized": True,
-            "context": {
-                "user": username
+        else:
+            return {
+                "isAuthorized": False,
+                "context": {}
             }
-        }
 
     except Exception as e:
         return {
-            "statusCode": 403,
-            "body": json.dumps({"message": f"Error: {str(e)}"})
+            "isAuthorized": False,
+            "context": {}
         }
